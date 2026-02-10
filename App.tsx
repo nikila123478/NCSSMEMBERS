@@ -71,23 +71,27 @@ const AnimatedRoutes: React.FC = () => {
           </PageWrapper>
         } />
 
-        {/* Protected Admin Routes */}
+        {/* --- PROTECTED ADMIN ROUTES --- */}
         <Route path={RoutePath.DASHBOARD} element={
           <PageWrapper>
+            {/* Admin Dashboard: Only Admins */}
             <ProtectedRoute allowedRoles={['admin', 'super_admin', 'SUPER_ADMIN', 'MEMBER_ADMIN']}>
               <Dashboard />
             </ProtectedRoute>
           </PageWrapper>
         } />
 
+        {/* --- PROTECTED MEMBER ROUTES --- */}
         <Route path="/member/dashboard" element={
           <PageWrapper>
+            {/* Member Dashboard: Members AND Admins allowed */}
             <ProtectedRoute allowedRoles={['member', 'USER', 'admin', 'super_admin', 'SUPER_ADMIN', 'MEMBER_ADMIN']}>
               <MemberDashboard />
             </ProtectedRoute>
           </PageWrapper>
         } />
 
+        {/* Other Admin Tools */}
         <Route path={RoutePath.FUNDS} element={
           <PageWrapper>
             <ProtectedRoute>
@@ -195,6 +199,7 @@ const App: React.FC = () => {
   return (
     <StoreProvider>
       <Router>
+        {/* Global Theme: Black Background, White Text, Min-Height Screen */}
         <div className="antialiased min-h-screen flex flex-col font-outfit bg-black text-white">
           <Navbar />
           <AnimatedRoutes />

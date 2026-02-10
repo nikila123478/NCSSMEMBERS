@@ -40,7 +40,8 @@ const MemberDashboard: React.FC = () => {
         position: '',
         indexNumber: '',
         grade: '',
-        bio: ''
+        bio: '',
+        school: ''
     });
 
     // --- ID Unlock State ---
@@ -71,7 +72,8 @@ const MemberDashboard: React.FC = () => {
                         position: data.position || 'Member',
                         indexNumber: data.indexNumber || '',
                         grade: data.grade || '',
-                        bio: '' // Assuming bio might be added later or mapped
+                        bio: '', // Add mapping if field exists in Firestore
+                        school: '' // Add mapping if field exists
                     });
                 }
             }
@@ -100,7 +102,7 @@ const MemberDashboard: React.FC = () => {
             unsubMessages();
             unsubEvents();
         };
-    }, [currentUser, isEditingProfile]); // Dependency on isEditingProfile ensures we don't overwrite while typing if an update comes in background
+    }, [currentUser, isEditingProfile]);
 
     // --- HANDLERS ---
 
@@ -113,7 +115,7 @@ const MemberDashboard: React.FC = () => {
     };
 
     // 1. Profile Save Handler
-    const handleSaveProfile = async (e: React.FormEvent) => {
+    const handleSaveProfile = async (e: React.MouseEvent) => {
         e.preventDefault(); // CRITICAL: Stop reload
         if (!currentUser?.id) return;
 
@@ -135,7 +137,7 @@ const MemberDashboard: React.FC = () => {
     };
 
     // 2. ID Unlock Handler
-    const handleUnlockId = async (e?: React.FormEvent) => {
+    const handleUnlockId = async (e?: React.MouseEvent) => {
         if (e) e.preventDefault();
         setUnlockError('');
 
@@ -157,7 +159,7 @@ const MemberDashboard: React.FC = () => {
     };
 
     // 3. Send Message Handler
-    const handleSendMessage = async (e?: React.FormEvent) => {
+    const handleSendMessage = async (e?: React.MouseEvent) => {
         if (e) e.preventDefault();
         if (!msgTitle || !msgDesc || !currentUser?.id) {
             alert("Please fill in all fields.");
@@ -211,11 +213,11 @@ const MemberDashboard: React.FC = () => {
     const firstName = userData?.displayName?.split(' ')[0] || currentUser?.name?.split(' ')[0] || 'Member';
 
     return (
-        // LAYOUT FIX: pt-28 min-h-screen
-        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row font-sans pt-28">
+        // LAYOUT FIX: pt-24 min-h-screen
+        <div className="min-h-screen bg-black text-white flex flex-col md:flex-row font-sans pt-24">
 
             {/* --- SIDEBAR --- */}
-            <aside className="hidden md:flex flex-col w-64 border-r border-white/10 bg-neutral-900/50 backdrop-blur-xl h-[calc(100vh-7rem)] sticky top-28">
+            <aside className="hidden md:flex flex-col w-64 border-r border-white/10 bg-neutral-900/50 backdrop-blur-xl h-[calc(100vh-6rem)] sticky top-24">
                 <div className="p-8">
                     <h1 className="text-2xl font-black tracking-tighter text-white">
                         NCSS <span className="text-red-600">MEMBER</span>
@@ -341,7 +343,7 @@ const MemberDashboard: React.FC = () => {
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleSaveProfile} className="space-y-6">
+                                <form className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {/* Name */}
                                         <div className="space-y-2">
@@ -395,12 +397,26 @@ const MemberDashboard: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
+                                        {/* Grade */}
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-400">Grade</label>
+                                            <div className="relative">
+                                                <Hash className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                                                <input
+                                                    disabled={!isEditingProfile}
+                                                    value={profileForm.grade}
+                                                    onChange={e => setProfileForm({ ...profileForm, grade: e.target.value })}
+                                                    className={`w-full bg-black border rounded-xl py-3 pl-12 pr-4 text-white outline-none focus:border-red-500 transition-colors ${!isEditingProfile ? 'border-white/5 text-gray-400' : 'border-white/20'}`}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {isEditingProfile && (
                                         <div className="pt-4 flex justify-end">
                                             <button
-                                                type="submit"
+                                                type="button"
+                                                onClick={handleSaveProfile}
                                                 className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all flex items-center gap-2"
                                             >
                                                 <Save className="w-5 h-5" /> Save Changes
@@ -442,7 +458,7 @@ const MemberDashboard: React.FC = () => {
                                         </button>
                                     </>
                                 ) : (
-                                    <form onSubmit={handleUnlockId} className="block">
+                                    <div className="block">
                                         <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/30 animate-pulse">
                                             <Lock className="w-10 h-10 text-red-500" />
                                         </div>
@@ -468,7 +484,7 @@ const MemberDashboard: React.FC = () => {
                                                 <Unlock className="w-5 h-5" /> UNLOCK VAULT
                                             </button>
                                         </div>
-                                    </form>
+                                    </div>
                                 )}
                             </div>
                         </motion.div>
@@ -544,7 +560,7 @@ const MemberDashboard: React.FC = () => {
                 </AnimatePresence>
             </main>
 
-            {/* --- MOBILE NAVIGATION --- */}
+            {/* --- MOBILE NAVIGATION (Fixed Bottom) --- */}
             <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-neutral-900 border-t border-white/10 p-4 flex justify-between z-50 pb-8">
                 {[
                     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },

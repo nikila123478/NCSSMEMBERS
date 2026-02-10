@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sync access state from session (Stability Fix)
+  // Sync access state from session
   useEffect(() => {
     if (sessionStorage.getItem('id_access_unlocked') === 'true') access.unlockId();
     if (sessionStorage.getItem('transparency_access_unlocked') === 'true') access.unlockTransparency();
@@ -80,6 +80,7 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     logout();
     navigate(RoutePath.HOME);
+    setIsMobileMenuOpen(false);
   };
 
   const navLinks = [
@@ -90,6 +91,47 @@ const Navbar: React.FC = () => {
     { label: 'Contact', path: '/contact' },
     { label: 'Help', path: '/help' },
   ];
+
+  // CRITICAL: Robust Dashboard Navigation Logic
+  const handleDashboardClick = async () => {
+    if (!currentUser) return;
+    setIsMobileMenuOpen(false); // Close mobile menu if open
+
+    try {
+      // 1. Force Fetch Latest Role
+      const userDoc = await getDoc(doc(db, "users", currentUser.id));
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const role = userData.role || 'USER';
+        const isApproved = userData.isApproved === true;
+        const isSuper = ['super_admin', 'SUPER_ADMIN'].includes(role);
+
+        // 2. Check Approval (Exempt Super Admins)
+        if (!isApproved && !isSuper) {
+          alert("Your account is pending approval.");
+          return;
+        }
+
+        // 3. Routing Switch
+        if (['member', 'USER'].includes(role)) {
+          // Member Route
+          navigate('/member/dashboard');
+        } else if (['admin', 'super_admin', 'SUPER_ADMIN', 'MEMBER_ADMIN'].includes(role)) {
+          // Admin Route
+          navigate(RoutePath.DASHBOARD);
+        } else {
+          // Fallback
+          navigate('/');
+        }
+      } else {
+        alert("User record not found.");
+      }
+    } catch (e) {
+      console.error("Navigation Error:", e);
+      alert("System Error. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -187,50 +229,14 @@ const Navbar: React.FC = () => {
                       <User className="w-4 h-4" /> My Profile
                     </button>
 
-                    {['SUPER_ADMIN', 'MEMBER_ADMIN', 'super_admin', 'admin'].includes(currentUser.role || '') && (
-                      <button onClick={() => navigate(RoutePath.DASHBOARD)} className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm font-medium text-gray-200 hover:text-white transition-colors flex items-center gap-3">
-                        <LayoutDashboard className="w-4 h-4" /> Admin Panel {['SUPER_ADMIN', 'super_admin'].includes(currentUser.role || '') && "(Super)"}
-                      </button>
-                    )}
-                    {/* MEMBER DASHBOARD BUTTON */}
-                    {['USER', 'member'].includes(currentUser.role || '') && (
-                      <button
-                        onClick={async () => {
-                          if (!currentUser) return;
-                          try {
-                            // 1. Force fetch latest data
-                            const userDoc = await getDoc(doc(db, "users", currentUser.id));
+                    {/* DYNAMIC DASHBOARD LINK */}
+                    <button
+                      onClick={handleDashboardClick}
+                      className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm font-medium text-gray-200 hover:text-white transition-colors flex items-center gap-3"
+                    >
+                      <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    </button>
 
-                            if (userDoc.exists()) {
-                              const userData = userDoc.data();
-                              const role = userData.role || 'USER';
-
-                              // 2. Check Approval (Exempt Super Admin)
-                              const isSuper = ['super_admin', 'SUPER_ADMIN'].includes(role);
-                              if (!userData.isApproved && !isSuper) {
-                                alert("Your account is pending approval.");
-                                return;
-                              }
-
-                              // 3. ROUTING SWITCH
-                              if (['member', 'USER'].includes(role)) {
-                                navigate('/member/dashboard'); // SEND MEMBERS HERE
-                              } else if (['admin', 'super_admin', 'SUPER_ADMIN', 'MEMBER_ADMIN'].includes(role)) {
-                                navigate('/dashboard'); // SEND ADMINS HERE (to Admin Dashboard)
-                              } else {
-                                navigate('/'); // Fallback
-                              }
-                            }
-                          } catch (error) {
-                            console.error("Navigation error:", error);
-                            alert("System error. Please try again.");
-                          }
-                        }}
-                        className="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-sm font-medium text-gray-200 hover:text-white transition-colors flex items-center gap-3"
-                      >
-                        <LayoutDashboard className="w-4 h-4" /> My Dashboard
-                      </button>
-                    )}
                     <div className="h-px bg-white/10 my-1 mx-2"></div>
                     <button onClick={handleLogout} className="w-full text-left px-4 py-3 rounded-xl hover:bg-red-900/20 text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-3">
                       <LogOut className="w-4 h-4" /> Log Out
@@ -279,6 +285,17 @@ const Navbar: React.FC = () => {
                   {link.label}
                 </NavLink>
               ))}
+
+              {/* Mobile Dashboard Link */}
+              {currentUser && (
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-lg font-bold text-center py-2 text-red-400 hover:text-red-300"
+                >
+                  Dashboard
+                </button>
+              )}
+
               <div className="h-px w-full bg-white/10" />
               <div className="flex flex-col gap-3">
                 {currentUser ? (
@@ -292,7 +309,7 @@ const Navbar: React.FC = () => {
         </AnimatePresence>
       </motion.nav >
 
-      {/* Toast Notification Container (Fixed) */}
+      {/* Toast Notification Container */}
       <AnimatePresence>
         {
           toast && (
