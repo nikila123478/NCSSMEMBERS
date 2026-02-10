@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default rule: Deny all by default for production safety
+    // match /{document=**} {
+    //   allow read, write: if false;
+    // }
+
+    // Allow authenticated users to read/write their own ID Card data
+    // The user ID implies that the document ID matches the user's Auth UID
+    // Allow any authenticated user (e.g. Admins) to READ all cards
+    // This fixes the "Missing or insufficient permissions" error on the AllIDs page
+    match /idCards/{cardId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == cardId;
+    }
+    
+    // Existing rules for other collections (Example - adjust as needed)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // General fallback for development (if previous setup was loose)
+    // match /{document=**} {
+    //   allow read, write: if request.auth != null;
+    // }
+  }
+}

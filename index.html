@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCSS MEMBERS</title>
+  <link rel="icon" type="image/png"
+    href="https://i.postimg.cc/Qtzp5v4x/ncss-crest-Nalanda-College-Science-Society-300x300-removebg-preview.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #E60000;
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f3f4f6;
+      color: #111;
+      overflow-x: hidden;
+    }
+
+    /* 3D Glassmorphism Utilities */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .glass-card-3d {
+      background: white;
+      border-radius: 1rem;
+      box-shadow:
+        20px 20px 60px #bebebe,
+        -20px -20px 60px #ffffff;
+      transition: transform 0.3s ease;
+    }
+
+    .glass-card-3d:hover {
+      transform: translateY(-5px);
+    }
+
+    .text-glow {
+      text-shadow: 0 0 20px rgba(230, 0, 0, 0.2);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #fff;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #E60000;
+      border-radius: 4px;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react/": "https://esm.sh/react@18.3.1/",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/": "https://esm.sh/react-dom@18.3.1/",
+        "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react",
+        "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?external=react,react-dom",
+        "lottie-react": "https://esm.sh/lottie-react@2.4.0?external=react,react-dom",
+        "recharts": "https://esm.sh/recharts@2.12.3?external=react,react-dom",
+        "jspdf": "https://esm.sh/jspdf@2.5.1",
+        "jspdf-autotable": "https://esm.sh/jspdf-autotable@3.8.2"
+      }
+    }
+    </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

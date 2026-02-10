@@ -1,0 +1,4 @@
+﻿pages/admin/Notifications.tsx(2,20): error TS2307: Cannot find module '../utils/firebase' or its corresponding type declarations.
+pages/admin/Notifications.tsx(4,25): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+pages/EventManager.tsx(6,10): error TS2305: Module '"../types"' has no exported member 'Event'.
+pages/UserManagement.tsx(238,31): error TS2339: Property 'memberAccessCode' does not exist on type 'FirestoreUser'.
