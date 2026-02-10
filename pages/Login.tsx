@@ -31,16 +31,16 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-black/90 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/20 via-black to-black p-4 font-outfit">
 
-      {/* --- 3D FLOATING CARD CONTAINER --- */}
+      {/* --- 3D FLOATING CARD CONTAINER (Responsive Wrapper) --- */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row w-full max-w-4xl bg-black/60 backdrop-blur-2xl border border-red-500/30 rounded-3xl shadow-[0_0_50px_rgba(220,38,38,0.25)] overflow-hidden"
+        className="flex flex-col md:flex-row w-full max-w-md md:max-w-4xl bg-black/60 backdrop-blur-2xl border border-red-500/30 rounded-3xl shadow-[0_0_50px_rgba(220,38,38,0.25)] overflow-hidden"
       >
 
-        {/* LEFT SIDE: VIDEO BOX (Contained) */}
-        <div className="w-full md:w-1/2 relative h-48 md:h-auto border-b md:border-b-0 md:border-r border-red-500/20 group">
+        {/* LEFT SIDE: VIDEO BOX (Contained, adjust height for mobile) */}
+        <div className="w-full md:w-1/2 relative h-40 md:h-auto border-b md:border-b-0 md:border-r border-red-500/20 group">
           <video
             autoPlay
             loop
@@ -61,14 +61,14 @@ const Login: React.FC = () => {
         </div>
 
         {/* RIGHT SIDE: FORM SECTION */}
-        <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center bg-white/5 relative">
+        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-center bg-white/5 relative">
 
           {/* LOGO */}
           <div className="flex justify-center mb-6">
             <img
               src="https://i.postimg.cc/Qtzp5v4x/ncss-crest-Nalanda-College-Science-Society-300x300-removebg-preview.png"
               alt="NCSS Logo"
-              className="h-16 w-auto drop-shadow-[0_0_15px_rgba(220,38,38,0.6)] animate-pulse-slow"
+              className="h-14 w-auto drop-shadow-[0_0_15px_rgba(220,38,38,0.6)] animate-pulse-slow"
             />
           </div>
 
@@ -90,7 +90,7 @@ const Login: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-black/40 border border-gray-700 text-white rounded-xl px-4 py-3 placeholder-gray-500 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all"
+                className="w-full bg-black/40 border border-gray-700 text-white rounded-xl px-4 py-3 placeholder-gray-500 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all text-sm md:text-base"
                 placeholder="Email Address"
               />
             </div>
@@ -101,7 +101,7 @@ const Login: React.FC = () => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-black/40 border border-gray-700 text-white rounded-xl px-4 py-3 placeholder-gray-500 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all"
+                className="w-full bg-black/40 border border-gray-700 text-white rounded-xl px-4 py-3 placeholder-gray-500 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/50 transition-all text-sm md:text-base"
                 placeholder="Password"
               />
             </div>

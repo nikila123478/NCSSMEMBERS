@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Facebook, Twitter, Instagram, Youtube, Linkedin, MessageCircle, Link as LinkIcon } from 'lucide-react';
-import { doc, onSnapshot } from 'firebase/firestore'; // Changed to onSnapshot for real-time updates
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { CMSData, RoutePath } from '../types';
 import { motion, useSpring, useTransform, animate } from 'framer-motion';
@@ -20,8 +20,8 @@ const AnimatedCounter = ({ value, label }: { value: number, label: string }) => 
   }, [value]);
 
   return (
-    <div className="flex flex-col items-center">
-      <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
+    <div className="flex flex-col items-center text-center">
+      <span className="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
         {displayValue}+
       </span>
       <span className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">
@@ -124,16 +124,16 @@ const Home: React.FC = () => {
 
       />
 
-      {/* Main Content Container (Increased Top Padding to pt-32) */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-20 max-w-7xl mx-auto pt-32">
+      {/* Main Content Container (Responsive Padding and Flex) */}
+      <div className="relative z-10 h-full flex flex-col justify-center px-4 md:px-20 max-w-7xl mx-auto pt-24 md:pt-32">
 
         {/* Hero Text */}
-        <div className="max-w-4xl">
+        <div className="max-w-4xl text-center md:text-left">
           <motion.h1
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-6xl md:text-8xl font-black tracking-tighter mb-4 leading-tight"
+            className="text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter mb-4 leading-tight"
             style={{ color: cmsData.heroTitleColor || cmsData.globalHeadingColor || '#ffffff' }}
           >
 
@@ -144,7 +144,7 @@ const Home: React.FC = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-xl md:text-2xl font-light text-gray-300 max-w-2xl leading-relaxed mb-8"
+            className="text-lg md:text-2xl font-light text-gray-300 max-w-2xl leading-relaxed mb-8 mx-auto md:mx-0"
             style={{ color: cmsData.globalBodyTextColor || '#d1d5db' }}
           >
             {cmsData.heroSubtitle}
@@ -154,17 +154,17 @@ const Home: React.FC = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="flex gap-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
           >
             <button
               onClick={() => navigate('/about')}
-              className="px-8 py-4 bg-white text-black font-bold text-lg rounded-full hover:bg-gray-200 transition-colors flex items-center gap-2 group"
+              className="px-8 py-3 md:py-4 bg-white text-black font-bold text-base md:text-lg rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 group"
             >
               Discover More <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
               onClick={() => navigate('/signup')}
-              className="px-8 py-4 text-white font-bold text-lg rounded-full transition-all shadow-lg hover:shadow-xl"
+              className="px-8 py-3 md:py-4 text-white font-bold text-base md:text-lg rounded-full transition-all shadow-lg hover:shadow-xl"
               style={{
                 backgroundColor: cmsData.heroButtonColor || '#dc2626',
                 boxShadow: `0 0 20px ${cmsData.heroButtonColor ? cmsData.heroButtonColor + '66' : '#dc262666'}`
@@ -176,13 +176,13 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* 3. SOCIAL ICONS (Restored & Fixed) */}
+        {/* 3. SOCIAL ICONS (Responsive Layout) */}
         {cmsData.socialLinks && cmsData.socialLinks.length > 0 && (
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="flex items-center gap-4 mt-10" // Increased spacing to mt-10
+            className="flex items-center justify-center md:justify-start gap-4 mt-10 md:mt-10 flex-wrap"
           >
             {cmsData.socialLinks.map((link) => (
               <a
@@ -190,14 +190,14 @@ const Home: React.FC = () => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-red-600 hover:border-red-600 transition-all duration-300 group overflow-hidden"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-red-600 hover:border-red-600 transition-all duration-300 group overflow-hidden"
               >
                 {/* RENDER THE IMAGE */}
                 {link.iconUrl ? (
                   <img
                     src={link.iconUrl}
                     alt={link.name}
-                    className="w-6 h-6 object-contain group-hover:brightness-200"
+                    className="w-5 h-5 md:w-6 md:h-6 object-contain group-hover:brightness-200"
                   />
                 ) : (
                   /* Fallback if no image link is provided */
@@ -208,20 +208,16 @@ const Home: React.FC = () => {
           </motion.div>
         )}
 
-        {/* BOTTOM SECTION: Social & Stats */}
+        {/* BOTTOM SECTION: Stats Bar (Responsive Grid) */}
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.8, duration: 1 }}
-          className="absolute bottom-10 left-0 right-0 px-6 md:px-20"
+          className="absolute bottom-6 left-0 right-0 px-4 md:px-20"
         >
-          {/* 3. SOCIAL ROW - REMOVED (Moved Up) */}
-
-
-          {/* 4. STATS BAR */}
           {cmsData.stats && (
-            <div className="border-t border-white/10 pt-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="border-t border-white/10 pt-4 md:pt-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                 <AnimatedCounter value={cmsData.stats.membersConfig || 0} label="Active Members" />
                 <AnimatedCounter value={cmsData.stats.projectsConfig || 0} label="Projects Launched" />
                 <AnimatedCounter value={cmsData.stats.awardsConfig || 0} label="Awards Won" />
@@ -234,7 +230,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Decorative Copyright (Minimal) */}
-      <div className="absolute bottom-2 w-full text-center text-[10px] text-gray-600 z-20">
+      <div className="absolute bottom-1 w-full text-center text-[8px] md:text-[10px] text-gray-600 z-20">
         &copy; {new Date().getFullYear()} Nalanda College Science Society. All Rights Reserved.
       </div>
 
